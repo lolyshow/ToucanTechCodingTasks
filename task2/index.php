@@ -17,9 +17,13 @@ function receive_input($searchInput)
             
             // Select where match using a prepared statement to query the database
             $sql =
-                'SELECT * FROM profiles where sureName like ? or  firstName like ? ';
+                'SELECT sureName, firstName, emailaddress
+                 FROM profiles 
+                 join emails 
+                 on profiles.userRefID = emails.userRefID 
+                 where sureName like ? or  firstName like ? ';
             
-            // Prepare the statement
+            // Prepare the statemente
             $stmt = $connection->prepare($sql);
 
             // Bind the parameter with a wildcard character for partial matching
