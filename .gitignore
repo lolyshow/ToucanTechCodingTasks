@@ -1,0 +1,3 @@
+# .gitignore
+/task2/helper/credentials.php
+/task2/mylog
