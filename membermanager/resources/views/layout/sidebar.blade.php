@@ -2,7 +2,7 @@
     <div class="position-sticky">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" href="welcome">
+                <a class="nav-link active" href="/">
                     Dashboard
                 </a>
             </li>

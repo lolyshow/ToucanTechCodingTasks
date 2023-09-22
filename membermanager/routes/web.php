@@ -22,37 +22,26 @@ Route::get('/',[ MemberController::class,'chartpage']);
 
 // members routes
 Route::resource('/members', MemberController::class);
-Route::get('/member/create', [
-    App\Http\Controllers\MemberController::class,
-    'create_form',
+Route::get('/member/create', [MemberController::class, 'create_form',
 ])->name('member.create');
-Route::post('/member/create', [
-    App\Http\Controllers\MemberController::class,
+Route::post('/member/create', [MemberController::class,
     'store',
 ])->name('member.create');
-// Route::post('/member/create', function () {
-//     return view('members.create');
-// });
+Route::get('/download-csv', [MemberController::class, 'downloadCsv']);
+
 
 // School route
 Route::resource('/schools', SchoolController::class);
-Route::get('/school/create', [
-    App\Http\Controllers\SchoolController::class,
-    'create_form',
+Route::get('/school/create', [SchoolController::class,'create_form',
 ])->name('school.create');
-Route::post('/school/create', [
-    App\Http\Controllers\SchoolController::class,
+Route::post('/school/create', [ SchoolController::class,
     'store',
 ])->name('school.create');
 
 
 // countries routes
 Route::resource('/countries', CountryController::class);
-Route::get('/country/create', [
-    App\Http\Controllers\CountryController::class,
-    'create_form',
+Route::get('/country/create', [ CountryController::class,'create_form',
 ])->name('country.create');
-Route::post('/country/create', [
-    App\Http\Controllers\CountryController::class,
-    'store',
+Route::post('/country/create', [ CountryController::class,'store',
 ])->name('country.create');

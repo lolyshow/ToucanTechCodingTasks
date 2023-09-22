@@ -6,14 +6,15 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h2>Demo members data</h2>
-                    <h2>Download Report</h2>
+                    <a href="{{ url('/download-csv') }}" class="btn btn-primary">Download CSV</a>
+
                 </div>
                 <div class="card-body ">
                     <a href="{{ url('/member/create') }}" class="btn btn-success btn-sm" title="Add New Student">
                         Add New
                     </a>
-                    <div class="form-group col-8 d-flex mt-2">
-                        <label for="school_filter" class="col-3">Filter by School:</label>
+                    <div class="form-group col-6 d-flex mt-2">
+                        <label for="school_filter" class="col-4">Filter by School:</label>
                         <select class="form-control" id="school-select" name="school_filter">
                             <option value="">All Schools</option>
                             @foreach($schools as $school)

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use App\Models\School;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
+use League\Csv\Writer;
 
 class MemberController extends Controller
 {
@@ -48,10 +50,7 @@ class MemberController extends Controller
         $schools = School::all();
         return view('members.create')->with('schools', $schools);
     }
-    public function create()
-    {
-        return view('member.create');
-    }
+ 
 
     /**
      * Store a newly created resource in storage.
@@ -66,59 +65,32 @@ class MemberController extends Controller
         return redirect('members')->with('flash_message', 'Member Addedd!');  
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function downloadCsv(Request $request)
     {
-        $members = Member::join("schools",
-        "members.school_id","schools.id")
-        ->join("schools", "schools.country_id","countries.id")
-        ->get();
-        return view('members.show')->with('Member', $members);
-    }
+        $data = Member::all(); 
+        // Create a CSV writer instance
+        $csv = Writer::createFromFileObject(new \SplTempFileObject());
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $member = Member::find($id);
-        return view('members.edit')->with('Member', $member);
-    }
+        // Add CSV header row (column names)
+        $csv->insertOne(['Name', 'Email', 'School']); 
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $member = Member::find($id);
-        $input = $request->all();
-        $member->update($input);
-        return redirect('member')->with('flash_message', 'Member Updated!'); 
-    }
+        // Add data rows to the CSV
+        foreach ($data as $row) {
+            $csv->insertOne([
+                $row->name, // Replace with actual column names
+                $row->email,
+                $row->school_name,
+            ]);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        Member::destroy($id);
-        return redirect('members')->with('flash_message', 'Member deleted!');  
-    }
+        // Set CSV headers for download
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="report.csv"',
+        ];
 
+        // Return the CSV as a downloadable response
+        return Response::make($csv->output(), 200, $headers);
+    }
     
 }

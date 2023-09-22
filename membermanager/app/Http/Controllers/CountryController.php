@@ -44,6 +44,7 @@ class CountryController extends Controller
         $validator = Validator::make($request->all(), [
             'country_name' => 'unique:countries',
         ]);
+        
 
         // check is the country already exists
         if (Country::where('country_name', $request->name)->first()) {
