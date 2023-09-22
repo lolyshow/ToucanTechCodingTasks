@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Member;
+use App\Models\Country;
+use App\Models\School;
 use Illuminate\Http\Request;
 
-class StudentController extends Controller
+class SchoolController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +15,9 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $member = Member::all();
-        
+        $schools = School::join("countries", 
+        "countries.id",'schools.country_id')->get();
+        return view('schools.index')->with('schools', $schools);
     }
 
     /**
@@ -23,9 +25,10 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create_form()
     {
-        //
+        $countries = Country::all();
+        return view('schools.create')->with('countries', $countries);
     }
 
     /**
@@ -36,7 +39,26 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $message = "";
+
+        // check if school exists
+        if (School::where('school_name', $request->name)->exists()) {
+            $message = 'School already exists';
+        } else {
+            // register the school
+            $school = School::create([
+                'school_name' => $request->name,
+                'country_id' => $request->id,
+            ]);
+            if ($school) {
+                $message = 'Success!!! School Addedd!';
+            }
+        }
+        return redirect('/schools')->with(
+            'flash_message',
+            $message
+        );
     }
 
     /**
@@ -45,6 +67,7 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
     public function show($id)
     {
         //

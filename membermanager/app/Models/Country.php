@@ -4,10 +4,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 
-class School extends Model
+class Country extends Model
 {
     protected $fillable = [
-        'school_name',
-        'country_id',
+        'country_name',
+        'address',
     ];
 }
